@@ -10,6 +10,7 @@ Created on Thu Oct 24 13:08:55 2019
 #min_vol of 50 generate 56 markets
 #min_vol of 40 generate 65 markets
 
+import binance
 import pandas as pd
 from pandas import Series, DataFrame
 import time
@@ -35,31 +36,31 @@ def get_markets_list(client, symbol='BTC', min_vol=50, max_markets=50):
 
 
 
-def balances_to_dataframe(markets):
+def balances_to_dataframe(client, markets):
     cost = 0
-    df_markets = DataFrame(columns=('Market Name', '1%', '2%', '3%', '4%', '5%', 'Balance % mean', 'Volume', 'Last price', \
-                                    'Mid price', 'Nb buy 5%', 'Nb sell 5%', 'Limit reach'))
+    df_markets = DataFrame(columns=('Market Name', '1', '2', '3', '4', '5', 'Balance % mean', 'Volume', 'Last price', \
+                                    'Mid price', 'Nb buy 5', 'Nb sell 5', 'Limit reach'))
     start = timer()
     
     for market in markets:
         #if market['symbol'] == 'USDTBTC':
         #    continue
         
-        book = market_book(symbol=market['symbol'], limit=100)
+        book = market_book(client, symbol=market['symbol'], limit=100)
         cost += 1
         if book.oo_reach == True:
-            book = market_book(market['symbol'], limit=500)
+            book = market_book(client, market['symbol'], limit=500)
             cost += 5
             time.sleep(0.5)
             if book.oo_reach == True:
-                book = market_book(market['symbol'], limit=1000)
+                book = market_book(client, market['symbol'], limit=1000)
                 cost += 10
                 time.sleep(1)
                 if book.oo_reach == True:
                     print('Limit out of reach with', market['symbol'])
         
         #Adding data to dataframe
-        #print(book.symbol, book.balance_pc, round(statistics.mean(book.balance_pc), 2))
+        print(book.symbol, book.balance_pc, round(statistics.mean(book.balance_pc), 2))
         df_markets = df_markets.append(Series([market['symbol'], \
                                         book.balance_pc[0], \
                                         book.balance_pc[1], \
@@ -73,11 +74,13 @@ def balances_to_dataframe(markets):
                                         round(book.nb_buy_orders[4], 2), \
                                         round(book.nb_sell_orders[4], 2), \
                                         book.oo_reach], index=df_markets.columns), ignore_index=True)
-           
+        del book
+        
     df_markets = df_markets.sort_values(by=['Balance % mean', 'Volume'], ascending=False)
     end = timer()
     print("API cost :", cost, " in", timedelta(seconds=end-start), " sec")
     return df_markets
+
 
 
 
@@ -97,9 +100,18 @@ class market_book:
         self.book = client.get_order_book(symbol=symbol, limit=limit)
         if self.book['bids'] != [] and self.book['asks'] != []:
             self.mid_price = float(self.book['bids'][0][0]) + (float(self.book['asks'][0][0]) - float(self.book['bids'][0][0])) / 2
-            for i in range(1, 6):
-                self.buy_price[i-1] = self.mid_price*(100-i)/100
-                self.sell_price[i-1] = self.mid_price*(100+i)/100
+            self.buy_price[0] = self.mid_price*0.995
+            self.buy_price[1] = self.mid_price*0.99
+            self.buy_price[2] = self.mid_price*0.985
+            self.buy_price[3] = self.mid_price*0.98
+            self.buy_price[4] = self.mid_price*0.975
+
+            self.sell_price[0] = self.mid_price*1.005
+            self.sell_price[1] = self.mid_price*1.01
+            self.sell_price[2] = self.mid_price*1.015
+            self.sell_price[3] = self.mid_price*1.02
+            self.sell_price[4] = self.mid_price*1.025
+            
             self.get_balances()
         else:
             self.mid_price = 0
@@ -127,3 +139,18 @@ class market_book:
         
         for i in range(5):
             self.balance_pc[i] = round(self.buy_sum[i]/self.sell_sum[i], 2)
+
+
+def get_book(symbol='BTCUSDT', limit=100):
+    test = market_book(symbol, limit)
+    print('------------\nMARKET : ', test.symbol)
+    print('Out of reach :', test.oo_reach)
+    print('Mid price :', test.mid_price)
+    print('Price buy :', test.buy_price)
+    print('Price buy sum :', test.buy_sum)
+    print('Nb of buy :', test.nb_buy_orders)
+    print('Price sell :', test.sell_price)
+    print('Price sell sum :', test.sell_sum)
+    print('Nb of sell :', test.nb_sell_orders)
+    print('% range :', test.balance_pc)
+    print('% range mean :', statistics.mean(test.balance_pc))

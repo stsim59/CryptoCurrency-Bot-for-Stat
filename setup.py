@@ -7,14 +7,14 @@ Created on Thu Oct 24 13:08:36 2019
 """
 
 import binance as bi
-import markets_op as ma
+import markets_op as mo
 from pandas import Series, DataFrame
 
 api_key = ''
 api_secret = ''
 client = bi.Client(api_key, api_secret)
 
-markets = ma.get_markets_list(client)
-df_market = ma.market_book(markets, symbol='BTC')
+markets = mo.get_markets_list(client)
+df_market = mo.balances_to_dataframe(client, markets)
 
 print(df_market)
