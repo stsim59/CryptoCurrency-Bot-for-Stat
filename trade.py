@@ -3,21 +3,18 @@
 import time
 import markets_op
 
-def trade(client, wallet, buy_pc=1.02, sell_pc=0.98):
-    
-    while True:
-        book = markets_op.market_book(client, symbol='ETHUSDT', limit=1000)
-        print('Looking', book.symbol, ', balance are', book.balance_pc)
-    
-        if book.balance_pc[0] > buy_pc:
-            if wallet.balance['ETH'] == 0:
-                print('Balance (', book.balance_pc[0], ') above limit, buying ETH with', wallet.balance['USDT'], 'USDT, at', book.mid_price, 'ETH')
-                wallet.new_order('ETHUSDT', 'buy', wallet.balance['USDT'], book.mid_price)
-        if book.balance_pc[0] < sell_pc:
-            if wallet.balance['ETH'] > 0:
-                print('Balance (', book.balance_pc[0], ') below limit, selling ETH with', wallet.balance['USDT'], 'USDT, at', book.mid_price, 'ETH')
-                wallet.new_order('ETHUSDT', 'sell', wallet.balance['ETH'], book.mid_price)
-        time.sleep(30)
+def log(text):
+    file = open('log.txt', 'r+')
+    file.write(test)
+    file.close()
+
+def trade(client, book, wallet, buy_pc=1.02, sell_pc=0.98):
+    if wallet.balance['ETH'] == 0 and book.balance_pc > buy_pc:
+        #text = 'Buying with balance (' + book.balance_pc[0] + ') above limit with, buying ETH with', wallet.balance['USDT'], 'USDT, at', book.mid_price, 'ETH')
+        wallet.new_order('ETHUSDT', 'buy', wallet.balance['USDT'], book.mid_price)
+    if wallet.balance['ETH'] > 0 and book.balance_pc[0] < sell_pc:
+        print('Selling with balance (', book.balance_pc[0], ') below limit, selling ETH with', wallet.balance['USDT'], 'USDT, at', book.mid_price, 'ETH')
+        wallet.new_order('ETHUSDT', 'sell', wallet.balance['ETH'], book.mid_price)
 
         
 class simple_wallet:
