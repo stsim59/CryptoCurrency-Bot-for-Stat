@@ -1,25 +1,40 @@
 # -*- coding: utf-8 -*-
 
-import time
-import markets_op
+#import time
+#import markets_op
 
 def log(text):
-    file = open('log.txt', 'r+')
-    file.write(test)
+    file = open('log.txt', 'a')
+    file.write(text + '\n')
     file.close()
 
-def trade(client, book, wallet, buy_pc=1.02, sell_pc=0.98):
-    if wallet.balance['ETH'] == 0 and book.balance_pc > buy_pc:
-        #text = 'Buying with balance (' + book.balance_pc[0] + ') above limit with, buying ETH with', wallet.balance['USDT'], 'USDT, at', book.mid_price, 'ETH')
-        wallet.new_order('ETHUSDT', 'buy', wallet.balance['USDT'], book.mid_price)
-    if wallet.balance['ETH'] > 0 and book.balance_pc[0] < sell_pc:
-        print('Selling with balance (', book.balance_pc[0], ') below limit, selling ETH with', wallet.balance['USDT'], 'USDT, at', book.mid_price, 'ETH')
+def trade(client, book, wallet, buy_pc=1.02, sell_pc=0.98, balance_index=0):
+    
+    #Selling order
+    if wallet.balance['ETH'] > 0 and book.balance_pc[balance_index] < sell_pc:
+        ETH_balance = wallet.balance['ETH']
+        print(f'{wallet.name} : selling with balance ({book.balance_pc[balance_index]}) below {sell_pc}, \
+              selling ETH with {ETH_balance} ETH, at {book.mid_price} ETH')
         wallet.new_order('ETHUSDT', 'sell', wallet.balance['ETH'], book.mid_price)
+        log(f'{wallet.name} : selling with balance ({book.balance_pc[balance_index]}) below {sell_pc}, selling ETH with {ETH_balance} ETH, at {book.mid_price} ETH')
+        log(f'{wallet.name} : balance is {wallet.get_balance()}')
+    
+    #Buying order
+    if wallet.balance['ETH'] == 0 and book.balance_pc[balance_index] > buy_pc:
+        USDT_balance = wallet.balance['USDT']
+        print(f'{wallet.name} : buying with balance ({book.balance_pc[balance_index]}) above {buy_pc}, \
+              buying ETH with {USDT_balance} USDT, at {book.mid_price} ETH')
+        wallet.new_order('ETHUSDT', 'buy', wallet.balance['USDT'], book.mid_price)
+        log(f'{wallet.name} : buying with balance ({book.balance_pc[balance_index]}) above {buy_pc}, buying ETH with {USDT_balance} USDT, at {book.mid_price} ETH')
+        log(f'{wallet.name} : balance is {wallet.get_balance()}')
+    
 
+        
         
 class simple_wallet:
    
-    def __init__(self, BTC=10, USDT=0, stoploss=0.05, **tickers):
+    def __init__(self, name, BTC=10, USDT=0, stoploss=0.05, **tickers):
+        self.name = name
         self.balance = {}
         self.balance["BTC"] = BTC
         self.balance["USDT"] = USDT

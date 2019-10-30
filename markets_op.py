@@ -141,6 +141,11 @@ class market_book:
             self.balance_pc[i] = round(self.buy_sum[i]/self.sell_sum[i], 2)
 
 
+def get_price(client, symbol='BTCUSDT'):
+    info = client.get_symbol_ticker(symbol=symbol)
+    price = float(info['price'])
+    return price 
+
 def get_book(symbol='BTCUSDT', limit=100):
     test = market_book(symbol, limit)
     print('------------\nMARKET : ', test.symbol)
