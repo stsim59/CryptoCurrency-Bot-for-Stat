@@ -60,7 +60,7 @@ def balances_to_dataframe(client, markets):
                     print('Limit out of reach with', market['symbol'])
         
         #Adding data to dataframe
-        print(book.symbol, book.balance_pc, round(statistics.mean(book.balance_pc), 2))
+        #print(book.symbol, book.balance_pc, round(statistics.mean(book.balance_pc), 2))
         df_markets = df_markets.append(Series([market['symbol'], \
                                         book.balance_pc[0], \
                                         book.balance_pc[1], \

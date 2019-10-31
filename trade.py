@@ -8,7 +8,7 @@ def log(text):
     file.write(text + '\n')
     file.close()
 
-def trade(client, book, wallet, buy_pc=1.02, sell_pc=0.98, balance_index=0):
+def trade(book, wallet, buy_pc=1.02, sell_pc=0.98, balance_index=0):
     
     #Selling order
     if wallet.balance['ETH'] > 0 and book.balance_pc[balance_index] < sell_pc:
