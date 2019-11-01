@@ -1,0 +1,60 @@
+Wallet 1.02-0.98-b : selling with balance (0.77) below 0.98, selling ETH with 10 ETH, at 181.85000000000002 ETH
+Wallet 1.02-0.98-b : balance is {'BTC': 0, 'USDT': 1816.6815000000001, 'ETH': 0}
+Wallet 1.04-0.96-b : selling with balance (0.77) below 0.96, selling ETH with 10 ETH, at 181.85000000000002 ETH
+Wallet 1.04-0.96-b : balance is {'BTC': 0, 'USDT': 1816.6815000000001, 'ETH': 0}
+Wallet 1.06-0.94-b : selling with balance (0.77) below 0.94, selling ETH with 10 ETH, at 181.85000000000002 ETH
+Wallet 1.06-0.94-b : balance is {'BTC': 0, 'USDT': 1816.6815000000001, 'ETH': 0}
+Wallet 1.08-0.92-b : selling with balance (0.77) below 0.92, selling ETH with 10 ETH, at 181.85000000000002 ETH
+Wallet 1.08-0.92-b : balance is {'BTC': 0, 'USDT': 1816.6815000000001, 'ETH': 0}
+Wallet 1.02-0.98-c : selling with balance (0.64) below 0.98, selling ETH with 10 ETH, at 181.85000000000002 ETH
+Wallet 1.02-0.98-c : balance is {'BTC': 0, 'USDT': 1816.6815000000001, 'ETH': 0}
+Wallet 1.04-0.96-c : selling with balance (0.64) below 0.96, selling ETH with 10 ETH, at 181.85000000000002 ETH
+Wallet 1.04-0.96-c : balance is {'BTC': 0, 'USDT': 1816.6815000000001, 'ETH': 0}
+Wallet 1.06-0.94-c : selling with balance (0.64) below 0.94, selling ETH with 10 ETH, at 181.85000000000002 ETH
+Wallet 1.06-0.94-c : balance is {'BTC': 0, 'USDT': 1816.6815000000001, 'ETH': 0}
+Wallet 1.08-0.92-c : selling with balance (0.64) below 0.92, selling ETH with 10 ETH, at 181.85000000000002 ETH
+Wallet 1.08-0.92-c : balance is {'BTC': 0, 'USDT': 1816.6815000000001, 'ETH': 0}
+Wallet 1.08-0.92 : selling with balance (1.02) below 1.04, selling ETH with 10 ETH, at 181.76999999999998 ETH
+Wallet 1.08-0.92 : balance is {'BTC': 0, 'USDT': 1815.8822999999998, 'ETH': 0}
+Wallet 1.06-0.94 : selling with balance (1.01) below 1.02, selling ETH with 10 ETH, at 182.365 ETH
+Wallet 1.06-0.94 : balance is {'BTC': 0, 'USDT': 1821.82635, 'ETH': 0}
+Wallet 1.04-0.96 : selling with balance (0.99) below 1, selling ETH with 10 ETH, at 182.34 ETH
+Wallet 1.04-0.96 : balance is {'BTC': 0, 'USDT': 1821.5766, 'ETH': 0}
+Wallet 1.02-0.98 : selling with balance (0.97) below 0.98, selling ETH with 10 ETH, at 182.465 ETH
+Wallet 1.02-0.98 : balance is {'BTC': 0, 'USDT': 1822.82535, 'ETH': 0}
+Wallet 1.02-0.98 : selling with balance (0.97) below 0.98, selling ETH with 10 ETH, at 182.465 ETH
+Wallet 1.02-0.98 : balance is {'BTC': 0, 'USDT': 1822.82535, 'ETH': 0}
+Wallet 1.04-0.96 : selling with balance (0.95) below 0.96, selling ETH with 10 ETH, at 182.375 ETH
+Wallet 1.04-0.96 : balance is {'BTC': 0, 'USDT': 1821.92625, 'ETH': 0}
+Wallet 1.06-0.94 : selling with balance (0.93) below 0.94, selling ETH with 10 ETH, at 182.39999999999998 ETH
+Wallet 1.06-0.94 : balance is {'BTC': 0, 'USDT': 1822.1759999999997, 'ETH': 0}
+Wallet 1.08-0.92 : selling with balance (0.91) below 0.92, selling ETH with 10 ETH, at 182.35500000000002 ETH
+Wallet 1.08-0.92 : balance is {'BTC': 0, 'USDT': 1821.72645, 'ETH': 0}
+Wallet 1.02-0.98 : buying with balance (1.03) above 1.02, buying ETH with 1822.82535 USDT, at 181.58499999999998 ETH
+Wallet 1.02-0.98 : balance is {'BTC': 0, 'USDT': 0.0, 'ETH': 10.028375276867584}
+Wallet 1.02-0.98 : buying with balance (1.03) above 1.02, buying ETH with 1822.82535 USDT, at 181.58499999999998 ETH
+Wallet 1.02-0.98 : balance is {'BTC': 0, 'USDT': 0.0, 'ETH': 10.028375276867584}
+Wallet 1.04-0.96 : buying with balance (1.05) above 1.04, buying ETH with 1821.92625 USDT, at 180.785 ETH
+Wallet 1.04-0.96 : balance is {'BTC': 0, 'USDT': 0.0, 'ETH': 10.067783962994717}
+Wallet 1.04-0.96 : buying with balance (1.05) above 1.04, buying ETH with 1821.5766 USDT, at 180.785 ETH
+Wallet 1.04-0.96 : balance is {'BTC': 0, 'USDT': 0.0, 'ETH': 10.065851831733829}
+Wallet 1.06-0.94 : buying with balance (1.07) above 1.06, buying ETH with 1822.1759999999997 USDT, at 180.635 ETH
+Wallet 1.06-0.94 : balance is {'BTC': 0, 'USDT': 0.0, 'ETH': 10.077525529382454}
+Wallet 1.06-0.94 : buying with balance (1.07) above 1.06, buying ETH with 1821.82635 USDT, at 180.635 ETH
+Wallet 1.06-0.94 : balance is {'BTC': 0, 'USDT': 0.0, 'ETH': 10.075591793672322}
+Wallet 1.08-0.92 : buying with balance (1.09) above 1.08, buying ETH with 1821.72645 USDT, at 180.32 ETH
+Wallet 1.08-0.92 : balance is {'BTC': 0, 'USDT': 0.0, 'ETH': 10.092639327584296}
+Wallet 1.08-0.92 : buying with balance (1.09) above 1.08, buying ETH with 1815.8822999999998 USDT, at 180.32 ETH
+Wallet 1.08-0.92 : balance is {'BTC': 0, 'USDT': 0.0, 'ETH': 10.060261855035492}
+Wallet 1.02-0.98-b : buying with balance (1.03) above 1.02, buying ETH with 1816.6815000000001 USDT, at 180.765 ETH
+Wallet 1.02-0.98-b : balance is {'BTC': 0, 'USDT': 0.0, 'ETH': 10.039912696041824}
+Wallet 1.04-0.96-b : buying with balance (1.05) above 1.04, buying ETH with 1816.6815000000001 USDT, at 180.85500000000002 ETH
+Wallet 1.04-0.96-b : balance is {'BTC': 0, 'USDT': 0.0, 'ETH': 10.034916471759143}
+Wallet 1.06-0.94-b : buying with balance (1.07) above 1.06, buying ETH with 1816.6815000000001 USDT, at 180.8 ETH
+Wallet 1.06-0.94-b : balance is {'BTC': 0, 'USDT': 0.0, 'ETH': 10.037969128871682}
+Wallet 1.08-0.92 : selling with balance (1.03) below 1.04, selling ETH with 10.060261855035492 ETH, at 180.735 ETH
+Wallet 1.08-0.92 : balance is {'BTC': 0, 'USDT': 1816.4231849434698, 'ETH': 0.0}
+Wallet 1.08-0.92-b : buying with balance (1.09) above 1.08, buying ETH with 1816.6815000000001 USDT, at 181.39 ETH
+Wallet 1.08-0.92-b : balance is {'BTC': 0, 'USDT': 0.0, 'ETH': 10.005319028061086}
+Wallet 1.02-0.98-c : buying with balance (1.03) above 1.02, buying ETH with 1816.6815000000001 USDT, at 181.45499999999998 ETH
+Wallet 1.02-0.98-c : balance is {'BTC': 0, 'USDT': 0.0, 'ETH': 10.001734967347277}
