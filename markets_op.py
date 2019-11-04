@@ -10,8 +10,6 @@ Created on Thu Oct 24 13:08:55 2019
 #min_vol of 50 generate 56 markets
 #min_vol of 40 generate 65 markets
 
-import binance
-import pandas as pd
 from pandas import Series, DataFrame
 import time
 from timeit import default_timer as timer
@@ -38,24 +36,20 @@ def get_markets_list(client, symbol='BTC', min_vol=50, max_markets=50):
 
 def balances_to_dataframe(client, markets):
     cost = 0
-    df_markets = DataFrame(columns=('Market Name', '1', '2', '3', '4', '5', 'Balance % mean', 'Volume', 'Last price', \
-                                    'Mid price', 'Nb buy 5', 'Nb sell 5', 'Limit reach'))
+    df_markets = DataFrame(columns=('Market Name', '1', '2', '3', '4', '5', 'Max', 'Volume', 'Last price'))
     start = timer()
     
     for market in markets:
-        #if market['symbol'] == 'USDTBTC':
-        #    continue
-        
         book = market_book(client, symbol=market['symbol'], limit=100)
         cost += 1
         if book.oo_reach == True:
+            time.sleep(0.6)
             book = market_book(client, market['symbol'], limit=500)
             cost += 5
-            time.sleep(0.5)
             if book.oo_reach == True:
+                time.sleep(1)
                 book = market_book(client, market['symbol'], limit=1000)
                 cost += 10
-                time.sleep(1)
                 if book.oo_reach == True:
                     print('Limit out of reach with', market['symbol'])
         
@@ -67,16 +61,13 @@ def balances_to_dataframe(client, markets):
                                         book.balance_pc[2], \
                                         book.balance_pc[3], \
                                         book.balance_pc[4], \
-                                        round(statistics.mean(book.balance_pc), 2), \
+                                        max(book.balance_pc), \
                                         round(float(market['quoteVolume']), 2), \
-                                        market['lastPrice'], \
-                                        book.mid_price, \
-                                        round(book.nb_buy_orders[4], 2), \
-                                        round(book.nb_sell_orders[4], 2), \
-                                        book.oo_reach], index=df_markets.columns), ignore_index=True)
+                                        market['lastPrice']], \
+                                        index=df_markets.columns), ignore_index=True)
         del book
         
-    df_markets = df_markets.sort_values(by=['Balance % mean', 'Volume'], ascending=False)
+    df_markets = df_markets.sort_values(by=['Max', 'Volume'], ascending=False)
     end = timer()
     print("API cost :", cost, " in", timedelta(seconds=end-start), " sec")
     return df_markets
@@ -102,15 +93,15 @@ class market_book:
             self.mid_price = float(self.book['bids'][0][0]) + (float(self.book['asks'][0][0]) - float(self.book['bids'][0][0])) / 2
             self.buy_price[0] = self.mid_price*0.995
             self.buy_price[1] = self.mid_price*0.99
-            self.buy_price[2] = self.mid_price*0.985
-            self.buy_price[3] = self.mid_price*0.98
-            self.buy_price[4] = self.mid_price*0.975
+            self.buy_price[2] = self.mid_price*0.98
+            self.buy_price[3] = self.mid_price*0.97
+            self.buy_price[4] = self.mid_price*0.95
 
             self.sell_price[0] = self.mid_price*1.005
             self.sell_price[1] = self.mid_price*1.01
-            self.sell_price[2] = self.mid_price*1.015
-            self.sell_price[3] = self.mid_price*1.02
-            self.sell_price[4] = self.mid_price*1.025
+            self.sell_price[2] = self.mid_price*1.02
+            self.sell_price[3] = self.mid_price*1.03
+            self.sell_price[4] = self.mid_price*1.05
             
             self.get_balances()
         else:
@@ -144,7 +135,7 @@ class market_book:
 def get_price(client, symbol='BTCUSDT'):
     info = client.get_symbol_ticker(symbol=symbol)
     price = float(info['price'])
-    return price 
+    return price
 
 def get_book(symbol='BTCUSDT', limit=100):
     test = market_book(symbol, limit)

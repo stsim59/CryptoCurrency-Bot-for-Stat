@@ -2,6 +2,11 @@
 # -*- coding: utf-8 -*-
 """
 Binance API modules
+
+1200 requests per minute
+10 orders per second
+100,000 orders per 24hrs
+
 """
 
 # coding=utf-8

@@ -14,16 +14,19 @@ import time, datetime
 
 
 def get_markets_to_dataframe():
-    btc_markets = mo.get_markets_list(client)
-    usd_markets = mo.get_markets_list(client, symbol='USDT', max_markets=80)
+    btc_markets = mo.get_markets_list(client, min_vol=1, max_markets=0)
+    usd_markets = mo.get_markets_list(client, min_vol=1000, symbol='USDT', max_markets=0)
     
     df_market = mo.balances_to_dataframe(client, btc_markets)
     print(df_market)
+    path = 'Markets/btc_markets-' + str(datetime.datetime.now()) + '.csv'
+    df_market.to_csv(path)
     time.sleep(4)
     
     df_usd_markets = mo.balances_to_dataframe(client, usd_markets)
     print(df_usd_markets)
-
+    path = 'Markets/usd_markets-' + str(datetime.datetime.now()) + '.csv'
+    df_market.to_csv(path)
 
 def log_balance(text):
     file = open(log_path, 'a')
@@ -33,6 +36,8 @@ def log_balance(text):
 
 def trading():    
     #Trading tests
+    log_balance('time,symbol,price,volume,bal1,bal2,bal3,bal4,bal5')
+
     wallet1 = tr.simple_wallet('Wallet 1.02-0.98', ETH=10, BTC=0)
     wallet2 = tr.simple_wallet('Wallet 1.04-0.96', ETH=10, BTC=0)
     wallet3 = tr.simple_wallet('Wallet 1.06-0.94', ETH=10, BTC=0)
@@ -55,8 +60,10 @@ def trading():
 
     while True:
         book = mo.market_book(client, symbol='ETHUSDT', limit=1000)
-        eth_price = mo.get_price(client, 'ETHUSDT')
-        print(f'Looking {book.symbol}, last price is : {eth_price} and balances are {book.balance_pc}')
+        info = client.get_ticker(symbol='ETHUSDT')
+        eth_price = info['lastPrice']
+        eth_volume = info['quoteVolume']
+        print(f'Looking {book.symbol}, last price is : {eth_price}, vol:{eth_volume} and balances are {book.balance_pc}')
         
         log_balance(f'{datetime.datetime.now()},{book.symbol},{eth_price},{book.balance_pc[0]},{book.balance_pc[1]},{book.balance_pc[2]},{book.balance_pc[3]},{book.balance_pc[4]}')
         
@@ -87,6 +94,5 @@ api_secret = ''
 client = bi.Client(api_key, api_secret)
 log_path = 'logETH_' + str(datetime.datetime.now()) + '.txt'
 
-
-#trading()
-get_markets_to_dataframe()
+trading()
+#get_markets_to_dataframe()
