@@ -24,16 +24,6 @@ def show_graphs():
     ax2 = fig.add_subplot(212)
     ax2 = df.plot(x="time", y="price", ax=ax2, kind="line")
 
-df = pd.read_csv("logETH.txt")
-#show_graphs()
-
-x = df['price']
-y = df.loc[:, 'bal1':'bal5']
-#y = df.loc[:, 'bal1']
-
-
-print('x:', x)
-print('y:', y)
 
 def linear_reg(x, y):
     from sklearn.model_selection import train_test_split
@@ -78,5 +68,16 @@ def linear_reg(x, y):
     #Guide :
     #https://www.listendata.com/2018/01/linear-regression-in-python.html#Difference-between-Simple-and-Multiple-Linear-Regression
     
+
+df = pd.read_csv("logETH.txt")
+#show_graphs()
+
+x = df['price']
+y = df.loc[:, 'bal1':'bal5']
+#y = df.loc[:, 'bal1']
+
+
+print('x:', x)
+print('y:', y)
 
 linear_reg(x, y)
