@@ -18,16 +18,16 @@ Created on Thu Oct 24 13:08:55 2019
 from pandas import Series, DataFrame
 import time
 from timeit import default_timer as timer
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 
 def get_markets_list(client, symbol='BTC', min_vol=50, max_markets=50):
-    stable_coins_list = ['BUSD', 'TUSD', 'USDC', 'PAX', 'GUSD', 'USDAP', 'USDS', 'BTC']
+    skip_coins_list = ['BUSD', 'TUSD', 'USDC', 'PAX', 'GUSD', 'USDAP', 'USDS', 'BTC', 'ETH']
     f_markets = []
     
     tickers = client.get_ticker()
     for ticker in tickers:
-        if float(ticker['quoteVolume']) > min_vol and not(any(coin in ticker['symbol'] for coin in stable_coins_list)) and ticker['symbol'][-len(symbol):] == symbol:
+        if float(ticker['quoteVolume']) > min_vol and not(any(coin in ticker['symbol'] for coin in skip_coins_list)) and ticker['symbol'][-len(symbol):] == symbol:
             f_markets.append(ticker)
     
     f_markets = sorted(f_markets, key=lambda i: float(i['quoteVolume']), reverse=True)
@@ -87,6 +87,39 @@ def balances_to_dataframe(client, markets):
     return df_markets
 
 
+def log_data(client, markets):
+    #df_markets = DataFrame(columns=('Market Name', '1', '2', '3', '4', '5', 'Volume', 'Last price'))
+    cost = 0
+    for market in markets:
+        book = market_book(client, symbol=market['symbol'], limit=100)
+        cost += 1
+        if book.oo_reach == True:
+            time.sleep(0.6)
+            book = market_book(client, market['symbol'], limit=500)
+            print(market['symbol'], ' > +5 ')
+            cost += 5
+            if book.oo_reach == True:
+                time.sleep(1)
+                book = market_book(client, market['symbol'], limit=1000)
+                cost += 10
+                print(market['symbol'], ' > +10 ')                
+                if book.oo_reach == True:
+                    print(market['symbol'], ' : drop')                
+                    continue
+        
+        text = datetime.now().strftime('%Y-%m-%d %H:%M:%S') + ',' + \
+            market['lastPrice'] + ',' + \
+            str(round(float(market['quoteVolume']))) + ',' +  \
+            str(book.balance_pc[0]) + ',' + \
+            str(book.balance_pc[1]) + ',' + \
+            str(book.balance_pc[2]) + ',' + \
+            str(book.balance_pc[3]) + ',' + \
+            str(book.balance_pc[4]) + '\n'
+        
+        file = open('Data/' + market['symbol'], 'a')
+        file.write(text)
+        file.close()
+    print('API cost :', cost)
 
 
 #MARKET BOOK _____________________
@@ -103,21 +136,20 @@ class market_book:
         self.book = client.get_order_book(symbol=symbol, limit=limit)
         if self.book['bids'] != [] and self.book['asks'] != []:
             self.mid_price = float(self.book['bids'][0][0]) + (float(self.book['asks'][0][0]) - float(self.book['bids'][0][0])) / 2
-            self.buy_price[0] = self.mid_price*0.995
-            self.buy_price[1] = self.mid_price*0.99
-            self.buy_price[2] = self.mid_price*0.98
-            self.buy_price[3] = self.mid_price*0.97
-            self.buy_price[4] = self.mid_price*0.95
-            self.sell_price[0] = self.mid_price*1.005
-            self.sell_price[1] = self.mid_price*1.01
-            self.sell_price[2] = self.mid_price*1.02
-            self.sell_price[3] = self.mid_price*1.03
-            self.sell_price[4] = self.mid_price*1.05
+            self.buy_price[0] = self.mid_price*0.99
+            self.buy_price[1] = self.mid_price*0.98
+            self.buy_price[2] = self.mid_price*0.97
+            self.buy_price[3] = self.mid_price*0.95
+            self.buy_price[4] = self.mid_price*0.9
+            self.sell_price[0] = self.mid_price*1.01
+            self.sell_price[1] = self.mid_price*1.02
+            self.sell_price[2] = self.mid_price*1.03
+            self.sell_price[3] = self.mid_price*1.05
+            self.sell_price[4] = self.mid_price*1.1
             self.get_balances()
         else:
             self.mid_price = 0
-    
-    
+        
     def get_balances(self):
         if float(self.book['bids'][len(self.book['bids'])-1][0]) > self.buy_price[4] or \
             float(self.book['asks'][len(self.book['asks'])-1][0]) < self.sell_price[4]:                
@@ -140,7 +172,10 @@ class market_book:
         
         for i in range(5):
             if self.buy_sum[i] != 0 and self.sell_sum[i] != 0:
-                self.balance_pc[i] = round(self.buy_sum[i]/self.sell_sum[i], 2)
+                if self.buy_sum[i] >= self.sell_sum[i]:
+                    self.balance_pc[i] = round(self.buy_sum[i]/self.sell_sum[i], 2)
+                else:
+                    self.balance_pc[i] = -1 * round(self.sell_sum[i]/self.buy_sum[i], 2)
             else:
                 self.balance_pc[i] = 0
 

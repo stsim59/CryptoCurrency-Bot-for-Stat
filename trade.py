@@ -54,9 +54,12 @@ class simple_wallet:
         if side == "buy":
             self.balance[symbol[:3]] += quantity/price*0.999   #currency
             self.balance[symbol[-4:]] -= quantity   #USDT
+        
+        
         elif side == "sell":
             self.balance[symbol[:3]] -= quantity   #currency
             self.balance[symbol[-4:]] += quantity*price*0.999   #USDT
+                
         else:
             raise "Buy or sell non-defined"
     

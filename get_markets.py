@@ -7,14 +7,14 @@ Created on Mon Nov  4 11:25:28 2019
 
 1200 requests per minute
 10 orders per second
-100,000 orders per 24hrs
+100,000 orders per 24hrs : 70 calls per minutes
 
 """
 
 import binance as bi
 import markets_op as mo
 import datetime
-
+import time
 
 def get_markets_btc():
     btc_markets = mo.get_markets_list(client, min_vol=1, max_markets=0)
@@ -38,7 +38,13 @@ api_key = ''
 api_secret = ''
 client = bi.Client(api_key, api_secret)
 
-get_markets_usd()
-#get_markets_btc()
+while True:
+    usd_markets = mo.get_markets_list(client, min_vol=0, symbol='USDT', max_markets=0)
+    mo.log_data(client, usd_markets)
+    print('Log at :', datetime.datetime.now())
+    time.sleep(210)
 
+#get_markets_usd()
+#get_markets_btc()
 #mo.get_market(client, 'HBARUSDT')
+#mo.get_market(client, 'BEAMUSDT')
