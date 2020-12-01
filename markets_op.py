@@ -40,7 +40,7 @@ def get_markets_list(client, symbol='BTC', min_vol=50, max_markets=50):
 
 def balances_to_dataframe(client, markets):
     cost = 0
-    df_markets = DataFrame(columns=('Market Name', '1', '2', '3', '4', '5', 'Volume', 'Last price'))
+    df_markets = DataFrame(columns=('Market Name', '1', '2', '3', '4', '5', 'Total', 'Volume', 'Last price'))
     start = timer()
     
     for market in markets:
@@ -65,11 +65,12 @@ def balances_to_dataframe(client, markets):
                                         book.balance_pc[2], \
                                         book.balance_pc[3], \
                                         book.balance_pc[4], \
+                                        book.balance_pc[5], \
                                         round(float(market['quoteVolume']), 2), \
                                         market['lastPrice']], \
                                         index=df_markets.columns), ignore_index=True)
-        '''
-        print(market['symbol'], \
+        
+        '''print(market['symbol'], \
                                         book.balance_pc[0], \
                                         book.balance_pc[1], \
                                         book.balance_pc[2], \
@@ -81,7 +82,7 @@ def balances_to_dataframe(client, markets):
         '''
         del book
         
-    df_markets = df_markets.sort_values(by=['5', 'Volume'], ascending=False)
+    df_markets = df_markets.sort_values(by=['6', 'Volume'], ascending=False)
     end = timer()
     print("API cost :", cost, " in", timedelta(seconds=end-start), " sec")
     return df_markets
@@ -129,7 +130,7 @@ class market_book:
         self.buy_price, self.sell_price = [0,0,0,0,0], [0,0,0,0,0]
         self.buy_sum, self.sell_sum = [0,0,0,0,0], [0,0,0,0,0]
         self.nb_buy_orders, self.nb_sell_orders = [0,0,0,0,0], [0,0,0,0,0]
-        self.balance_pc = [0,0,0,0,0]
+        self.balance_pc = [0,0,0,0,0,0]
         #To determine if the orders in book is out of reach for the number of orders(def __init__ limit var)
         self.oo_reach = False
         self.symbol = symbol
@@ -178,6 +179,8 @@ class market_book:
                     self.balance_pc[i] = -1 * round(self.sell_sum[i]/self.buy_sum[i], 2)
             else:
                 self.balance_pc[i] = 0
+                
+        self.balance_pc[5] = self.balance_pc[0]+self.balance_pc[1]+self.balance_pc[2]+self.balance_pc[3]+self.balance_pc[4]
 
 
 def get_price(client, symbol='BTCUSDT'):
@@ -185,6 +188,8 @@ def get_price(client, symbol='BTCUSDT'):
     price = float(info['price'])
     return price
 
+
+#General statistics for a symbol
 def get_market(client, symbol='BTCUSDT', limit=100):
     market = market_book(client, symbol, limit)
     info = client.get_ticker(symbol=symbol)

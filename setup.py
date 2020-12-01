@@ -8,32 +8,34 @@ Created on Thu Oct 24 13:08:36 2019
 
 import binance as bi
 import markets_op as mo
-import trade as tr
+#import trade as tr
 import time, datetime
 #from pandas import Series, DataFrame
 
 
 def get_markets_to_dataframe():
-    btc_markets = mo.get_markets_list(client, min_vol=1, max_markets=0)
-    usd_markets = mo.get_markets_list(client, min_vol=1000, symbol='USDT', max_markets=0)
+    #btc_markets = mo.get_markets_list(client, min_vol=100000, max_markets=0)
+    usd_markets = mo.get_markets_list(client, min_vol=600000, symbol='USDT', max_markets=0)
     
+    '''
     df_market = mo.balances_to_dataframe(client, btc_markets)
     print(df_market)
-    path = 'Markets/btc_markets-' + str(datetime.datetime.now()) + '.csv'
+    path = 'Markets/btc_markets.csv'
     df_market.to_csv(path)
     time.sleep(4)
+    '''
     
     df_usd_markets = mo.balances_to_dataframe(client, usd_markets)
     print(df_usd_markets)
-    path = 'Markets/usd_markets-' + str(datetime.datetime.now()) + '.csv'
-    df_market.to_csv(path)
+    path = 'Markets/usd_markets.csv'
+    df_usd_market.to_csv(path)
 
 def log_balance(text):
     file = open(log_path, 'a')
     file.write(text + '\n')
     file.close
 
-
+'''
 def trading():    
     #Trading tests
     log_balance('time,symbol,price,volume,bal1,bal2,bal3,bal4,bal5')
@@ -88,11 +90,16 @@ def trading():
         tr.trade(book, wallet24, buy_pc=1.08, sell_pc=1.04)
 
         time.sleep(30)
+'''
+
 
 api_key = ''
 api_secret = ''
 client = bi.Client(api_key, api_secret)
-log_path = 'logETH_' + str(datetime.datetime.now()) + '.txt'
+#log_path = 'logETH_' + str(datetime.datetime.now()) + '.txt'
+log_path = 'logETH.txt'
 
-trading()
-#get_markets_to_dataframe()
+#trading()
+while True:
+    get_markets_to_dataframe()
+    time.sleep(900)     #au 15 min
