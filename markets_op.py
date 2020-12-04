@@ -22,7 +22,7 @@ from datetime import timedelta, datetime
 
 
 def get_markets_list(client, symbol='BTC', min_vol=50, max_markets=50):
-    skip_coins_list = ['BUSD', 'TUSD', 'USDC', 'PAX', 'GUSD', 'USDAP', 'USDS', 'BTC', 'ETH']
+    skip_coins_list = ['BUSD', 'TUSD', 'USDC', 'PAX', 'GUSD', 'USDAP', 'USDS', 'BTC', 'ETH', 'XRP']
     f_markets = []
     
     tickers = client.get_ticker()
@@ -82,45 +82,70 @@ def balances_to_dataframe(client, markets):
         '''
         del book
         
-    df_markets = df_markets.sort_values(by=['6', 'Volume'], ascending=False)
+    df_markets = df_markets.sort_values(by=['5', 'Volume'], ascending=False)
     end = timer()
     print("API cost :", cost, " in", timedelta(seconds=end-start), " sec")
     return df_markets
 
 
 def log_data(client, markets):
-    #df_markets = DataFrame(columns=('Market Name', '1', '2', '3', '4', '5', 'Volume', 'Last price'))
+    df_markets = DataFrame(columns=('Market Name', '1', '2', '3', '4', '5', 'Total', 'Volume', 'Last price'))
     cost = 0
+    dropmarket = []
+    numMarkets = 0
+    
     for market in markets:
         book = market_book(client, symbol=market['symbol'], limit=100)
         cost += 1
+        numMarkets += 1
         if book.oo_reach == True:
             time.sleep(0.6)
             book = market_book(client, market['symbol'], limit=500)
-            print(market['symbol'], ' > +5 ')
+            #print(market['symbol'], ' > +5 ')
             cost += 5
             if book.oo_reach == True:
                 time.sleep(1)
                 book = market_book(client, market['symbol'], limit=1000)
                 cost += 10
-                print(market['symbol'], ' > +10 ')                
+                #print(market['symbol'], ' > +10 ')                
                 if book.oo_reach == True:
-                    print(market['symbol'], ' : drop')                
+                    #print(market['symbol'], ' : drop')                
+                    dropmarket.append(market['symbol'])
+                    numMarkets -= 1
                     continue
         
+        volume = str(round(float(market['quoteVolume']), 0))
         text = datetime.now().strftime('%Y-%m-%d %H:%M:%S') + ',' + \
-            market['lastPrice'] + ',' + \
-            str(round(float(market['quoteVolume']))) + ',' +  \
+            str(round(float(market['lastPrice']), 5)) + ',' + \
+            volume[:-2] + ',' +  \
             str(book.balance_pc[0]) + ',' + \
             str(book.balance_pc[1]) + ',' + \
             str(book.balance_pc[2]) + ',' + \
             str(book.balance_pc[3]) + ',' + \
-            str(book.balance_pc[4]) + '\n'
+            str(book.balance_pc[4]) + ',' + \
+            str(book.balance_pc[5]) + '\n'
         
+        df_markets = df_markets.append(Series([market['symbol'], \
+                                        book.balance_pc[0], \
+                                        book.balance_pc[1], \
+                                        book.balance_pc[2], \
+                                        book.balance_pc[3], \
+                                        book.balance_pc[4], \
+                                        book.balance_pc[5], \
+                                        round(float(market['quoteVolume']), 0), \
+                                        round(float(market['lastPrice']), 5)], \
+                                        index=df_markets.columns), ignore_index=True)
+                    
         file = open('Data/' + market['symbol'], 'a')
         file.write(text)
         file.close()
+    print('Drop markets : ', dropmarket, ' number of market : ', numMarkets)
     print('API cost :', cost)
+    
+    df_markets = df_markets.sort_values(by=['5', 'Volume'], ascending=False)
+    print(df_markets.head())
+    df_markets.to_csv('usd_markets.csv')
+
 
 
 #MARKET BOOK _____________________
