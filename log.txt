@@ -56,5 +56,3 @@ Wallet 1.08-0.92 : selling with balance (1.03) below 1.04, selling ETH with 10.0
 Wallet 1.08-0.92 : balance is {'BTC': 0, 'USDT': 1816.4231849434698, 'ETH': 0.0}
 Wallet 1.08-0.92-b : buying with balance (1.09) above 1.08, buying ETH with 1816.6815000000001 USDT, at 181.39 ETH
 Wallet 1.08-0.92-b : balance is {'BTC': 0, 'USDT': 0.0, 'ETH': 10.005319028061086}
-Wallet 1.02-0.98-c : buying with balance (1.03) above 1.02, buying ETH with 1816.6815000000001 USDT, at 181.45499999999998 ETH
-Wallet 1.02-0.98-c : balance is {'BTC': 0, 'USDT': 0.0, 'ETH': 10.001734967347277}
